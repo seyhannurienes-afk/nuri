@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3. Hafta - Şatafatlı Ana Sayfa</title>
+    <style>
+        :root {
+            --primary: #8a2be2;
+            --secondary: #ff00ff;
+            --bg-color: #0f0f13;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            cursor: none; /* Kendi imlecimizi kullanacağız */
+        }
+
+        /* Mouse Follower Efektleri */
+        .cursor-follower {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, rgba(138,43,226,0.8) 0%, rgba(255,0,255,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s, background 0.2s;
+            z-index: 9999;
+            mix-blend-mode: screen;
+            box-shadow: 0 0 20px 10px rgba(138,43,226,0.5);
+        }
+
+        .cursor-dot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: white;
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 10000;
+            box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.8);
+        }
+
+        /* Ana Konteyner */
+        .container {
+            text-align: center;
+            z-index: 10;
+            padding: 4rem 3rem 3rem 3rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.1);
+            animation: float 6s ease-in-out infinite;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* Dairesel Çerçeveli Görsel */
+        .profile-img {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 30px rgba(138, 43, 226, 0.8), 0 0 60px rgba(255, 0, 255, 0.5);
+            margin-top: -8rem; /* Kutunun üst kısmına taşmasını sağlar */
+            margin-bottom: 2rem;
+            animation: pulse 3s infinite alternate;
+            background-color: #111; /* Resim yüklenene kadar veya yoksa arkaplan */
+            cursor: none;
+            position: relative;
+            z-index: 11;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 20px rgba(138, 43, 226, 0.4), 0 0 40px rgba(255, 0, 255, 0.2); transform: scale(1); }
+            100% { box-shadow: 0 0 40px rgba(138, 43, 226, 0.9), 0 0 80px rgba(255, 0, 255, 0.6); transform: scale(1.05); border-color: rgba(255, 255, 255, 0.4); }
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            margin-top: 0;
+            background: linear-gradient(45deg, var(--primary), var(--secondary), #00d2ff);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            animation: shine 3s linear infinite;
+        }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+
+        p {
+            font-size: 1.2rem;
+            color: #ccc;
+            margin-bottom: 3rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        /* Buton Grubu */
+        .button-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap; /* Küçük ekranlarda alta geçmesi için */
+        }
+
+        /* Parlayan Yönlendirme Butonları */
+        .btn {
+            position: relative;
+            display: inline-block;
+            padding: 18px 45px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 50px;
+            border: none;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 15px 30px rgba(138, 43, 226, 0.4);
+            cursor: none;
+        }
+
+        .btn-data {
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
+            box-shadow: 0 15px 30px rgba(0, 198, 255, 0.4);
+        }
+
+        .btn:hover {
+            transform: scale(1.08) translateY(-5px);
+            box-shadow: 0 20px 40px rgba(255, 0, 255, 0.6);
+        }
+        
+        .btn-data:hover {
+            box-shadow: 0 20px 40px rgba(0, 198, 255, 0.6);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+            transition: all 0.6s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        /* Arka Plan Renk Gölgeleri */
+        .bg-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .shape {
+            position: absolute;
+            filter: blur(120px);
+            opacity: 0.6;
+            animation: moveShape 25s infinite alternate ease-in-out;
+        }
+
+        .shape-1 {
+            top: -20%;
+            left: -10%;
+            width: 60vw;
+            height: 60vw;
+            background: var(--primary);
+            border-radius: 50%;
+        }
+
+        .shape-2 {
+            bottom: -20%;
+            right: -10%;
+            width: 70vw;
+            height: 70vw;
+            background: var(--secondary);
+            border-radius: 50%;
+            animation-delay: -5s;
+        }
+
+        @keyframes moveShape {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(150px, 100px) scale(1.1); }
+            100% { transform: translate(-50px, 200px) scale(0.9); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+    </div>
+
+    <!-- Fare takipçileri -->
+    <div class="cursor-follower" id="follower"></div>
+    <div class="cursor-dot" id="dot"></div>
+
+    <!-- İçerik -->
+    <div class="container">
+        <!-- Depo klasöründeki yuvarlak çerçeveli görsel -->
+        <img src="../image.png" alt="Profil veya Depo Görseli" class="profile-img">
+        
+        <h1>Büyülü Evren</h1>
+        <p>Gelişmiş görsel efektlerin ve harika animasyonların dünyasına hoş geldiniz.</p>
+        
+        <div class="button-group">
+            <!-- İstenen yeni butonlar -->
+            <a href="grafikler.png" class="btn">Grafik</a>
+            <a href="data.csv" class="btn btn-data">Data</a>
+        </div>
+    </div>
+
+    <script>
+        const follower = document.getElementById('follower');
+        const dot = document.getElementById('dot');
+
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+        let followerX = window.innerWidth / 2;
+        let followerY = window.innerHeight / 2;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+
+            dot.style.left = mouseX + 'px';
+            dot.style.top = mouseY + 'px';
+        });
+
+        function animate() {
+            followerX += (mouseX - followerX) * 0.15;
+            followerY += (mouseY - followerY) * 0.15;
+
+            follower.style.left = followerX + 'px';
+            follower.style.top = followerY + 'px';
+
+            requestAnimationFrame(animate);
+        }
+        
+        animate();
+
+        // Buton etkileşimleri
+        const btns = document.querySelectorAll('.btn');
+        btns.forEach(btn => {
+            btn.addEventListener('mouseenter', () => {
+                follower.style.width = '80px';
+                follower.style.height = '80px';
+                
+                if (btn.classList.contains('btn-data')) {
+                    follower.style.background = 'radial-gradient(circle, rgba(0, 198, 255, 0.8) 0%, rgba(58, 123, 213, 0) 70%)';
+                    follower.style.boxShadow = '0 0 30px 15px rgba(0, 198, 255, 0.6)';
+                } else {
+                    follower.style.background = 'radial-gradient(circle, rgba(255,0,255,0.8) 0%, rgba(138,43,226,0) 70%)';
+                    follower.style.boxShadow = '0 0 30px 15px rgba(255,0,255,0.6)';
+                }
+            });
+            btn.addEventListener('mouseleave', () => {
+                follower.style.width = '40px';
+                follower.style.height = '40px';
+                follower.style.background = 'radial-gradient(circle, rgba(138,43,226,0.8) 0%, rgba(255,0,255,0) 70%)';
+                follower.style.boxShadow = '0 0 20px 10px rgba(138,43,226,0.5)';
+            });
+        });
+
+        // Ortadaki resim için özel fare efekti
+        const img = document.querySelector('.profile-img');
+        img.addEventListener('mouseenter', () => {
+            follower.style.width = '120px';
+            follower.style.height = '120px';
+            follower.style.background = 'radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%)';
+            follower.style.boxShadow = '0 0 40px 20px rgba(255,255,255,0.2)';
+        });
+        img.addEventListener('mouseleave', () => {
+            follower.style.width = '40px';
+            follower.style.height = '40px';
+            follower.style.background = 'radial-gradient(circle, rgba(138,43,226,0.8) 0%, rgba(255,0,255,0) 70%)';
+            follower.style.boxShadow = '0 0 20px 10px rgba(138,43,226,0.5)';
+        });
+    </script>
+</body>
+</html>
